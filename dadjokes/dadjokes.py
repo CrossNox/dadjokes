@@ -45,6 +45,21 @@ class Dadjoke(AbstractDadJoke):
         response = response.json()
         self._joke = response['joke']
 
+    # hey, at least i don't need to call the api
+    @property
+    def as_slack(self):
+        joke = self.joke
+        reponse = {'attachments': [
+            {
+                'fallback': joke,
+                'footer': ' - ',
+                'text': joke
+            }
+        ],
+            'response_type': 'in_channel',
+            'username': 'dadjokes'}
+        return reponse
+
     @property
     def id(self):
         if self._jokeid is None:
