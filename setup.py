@@ -13,7 +13,7 @@ setup(name='dadjokes',
       url='https://github.com/crossnox/dadjokes',
       author='CrossNox',
       packages=['dadjokes'],
-      # scripts=['script/dadjokes'],
+      scripts=['script/dadjokes'],
       install_requires=['requests'],
       classifiers=[
           'Programming Language :: Python :: 3'

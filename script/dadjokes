@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+
+import argparse
+from dadjokes import Dadjoke
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('--id', help='joke id')
+    parser.add_argument('--as_slack', '-s', action='store_true', help='to get the joke as a slack message')
+    parser.add_argument('--verbose', '-v', action='store_true', help="prints the id")
+    args = parser.parse_args()
+
+    dj = Dadjoke(args.id)
+    if args.as_slack:
+        print(dj.as_slack)
+    else:
+        print(dj.joke)
+    if args.verbose:
+        print('id: {}'.format(dj.id))
