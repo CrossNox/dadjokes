@@ -1,6 +1,6 @@
 import requests
 from dadjokes import USER_AGENT
-from abc import ABCMeta as ABC, abstractmethod
+import urllib
 from functools import lru_cache
 
 HEADERS = {'User-Agent': USER_AGENT}
@@ -16,27 +16,51 @@ def get_headers(accept):
     return h
 
 
-class AbstractDadJoke:
-    @property
-    @abstractmethod
-    def id(self):
-        pass
-
-    @property
-    @abstractmethod
-    def joke(self):
-        pass
+@lru_cache(maxsize=128)
+def cached_request(url):
+    return requests.get(url, headers=get_headers(JSON))
 
 
-class Dadjoke(AbstractDadJoke):
+class DadjokeSearch:
+    def __init__(self, term=None, limit=None):
+        url = BASE_URL + 'search'
+        if term:
+            url += '?'
+            url += urllib.parse.urlencode({'term': term})
+        self.url = url
+        self.limit = limit
+
+    def __next__(self):
+        return self
+
+    def __iter__(self):
+        r = cached_request(self.url).json()
+        joked = 0
+        while r:
+            for result in r['results']:
+                if joked == self.limit:
+                    break
+                dj = Dadjoke()
+                dj._joke = result['joke']
+                dj._jokeid = result['id']
+                joked += 1
+                yield dj
+            if r['current_page'] == r['total_pages']:
+                r = None
+            elif joked != self.limit:
+                r = None
+            else:
+                r = cached_request(self.url).json()
+
+
+class Dadjoke:
     def __init__(self, jokeid=None):
         self._jokeid = jokeid
         self._joke = None
 
     @classmethod
-    @lru_cache(maxsize=64)
     def _req(cls, url):
-        return requests.get(url, headers=get_headers(JSON))
+        return cached_request(url)
 
     def _get_joke(self):
         url = BASE_URL
