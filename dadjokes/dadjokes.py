@@ -1,24 +1,12 @@
 import requests
-from dadjokes import USER_AGENT
+from dadjokes import USER_AGENT, BASE_URL, HEADERS
 import urllib
 from functools import lru_cache
-
-HEADERS = {'User-Agent': USER_AGENT}
-BASE_URL = "https://icanhazdadjoke.com/"
-
-TEXT = 'text/plain'
-JSON = 'application/json'
-
-
-def get_headers(accept):
-    h = dict(HEADERS)
-    h['Accept'] = accept
-    return h
 
 
 @lru_cache(maxsize=128)
 def cached_request(url):
-    return requests.get(url, headers=get_headers(JSON))
+    return requests.get(url, headers=HEADERS)
 
 
 class DadjokeSearch:
@@ -59,12 +47,14 @@ class Dadjoke:
         self._joke = None
 
     @classmethod
-    def _req(cls, url):
+    def _req(cls, url, cached=True):
+        if not cached:
+            return requests.get(url, headers=HEADERS)
         return cached_request(url)
 
     def _get_joke(self):
         url = BASE_URL
-        response = Dadjoke._req(url)
+        response = Dadjoke._req(url, cached=False)
         response = response.json()
         self._jokeid = response['id']
         self._joke = response['joke']
