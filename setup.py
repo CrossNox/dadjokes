@@ -1,5 +1,5 @@
 from setuptools import setup
-
+from dadjokes.constants import VERSION
 
 def readme():
   with open('README.rst') as f:
@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='dadjokes',
-      version='0.1',
+      version=VERSION,
       description='icanhazdadjoke api wrapper',
       long_description=readme(),
       url='https://github.com/crossnox/dadjokes',

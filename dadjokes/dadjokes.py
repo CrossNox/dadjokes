@@ -28,8 +28,8 @@ class AbstractDadJoke:
 
 
 class Dadjoke(AbstractDadJoke):
-    def __init__(self):
-        self._jokeid = None
+    def __init__(self, jokeid=None):
+        self._jokeid = jokeid
         self._joke = None
 
     def _get_joke(self):
@@ -37,6 +37,12 @@ class Dadjoke(AbstractDadJoke):
         response = requests.get(url, headers=get_headers(JSON))
         response = response.json()
         self._jokeid = response['id']
+        self._joke = response['joke']
+
+    def _fetch_joke(self):
+        url = BASE_URL + 'j/' + self._jokeid
+        response = requests.get(url, headers=get_headers(JSON))
+        response = response.json()
         self._joke = response['joke']
 
     @property
@@ -48,5 +54,8 @@ class Dadjoke(AbstractDadJoke):
     @property
     def joke(self):
         if not self._joke:
-            self._get_joke()
+            if self._jokeid:
+                self._fetch_joke()
+            else:
+                self._get_joke()
         return self._joke
