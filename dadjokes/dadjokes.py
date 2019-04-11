@@ -1,6 +1,7 @@
 import requests
 from dadjokes import USER_AGENT
 from abc import ABCMeta as ABC, abstractmethod
+from functools import lru_cache
 
 HEADERS = {'User-Agent': USER_AGENT}
 BASE_URL = "https://icanhazdadjoke.com/"
@@ -32,16 +33,21 @@ class Dadjoke(AbstractDadJoke):
         self._jokeid = jokeid
         self._joke = None
 
+    @classmethod
+    @lru_cache(maxsize=64)
+    def _req(cls, url):
+        return requests.get(url, headers=get_headers(JSON))
+
     def _get_joke(self):
         url = BASE_URL
-        response = requests.get(url, headers=get_headers(JSON))
+        response = Dadjoke._req(url)
         response = response.json()
         self._jokeid = response['id']
         self._joke = response['joke']
 
     def _fetch_joke(self):
         url = BASE_URL + 'j/' + self._jokeid
-        response = requests.get(url, headers=get_headers(JSON))
+        response = Dadjoke._req(url)
         response = response.json()
         self._joke = response['joke']
 
