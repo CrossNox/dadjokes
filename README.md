@@ -10,7 +10,7 @@ pip install dadjokes
 
 ## Example
 ```python
-from dadjoke import Dadjokes
+from dadjokes import Dadjoke
 dadjoke = Dadjoke()
 print(dadjoke.joke)
 ```
