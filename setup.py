@@ -1,21 +1,23 @@
 from setuptools import setup
-from dadjokes.constants import VERSION
+from dadjokes.constants import __version__
+
 
 def readme():
-  with open('README.rst') as f:
-    return f.read()
+    with open('README.md') as f:
+        return f.read()
 
 
-setup(name='dadjokes',
-      version=VERSION,
-      description='icanhazdadjoke api wrapper',
-      long_description=readme(),
-      url='https://github.com/crossnox/dadjokes',
-      author='CrossNox',
-      packages=['dadjokes'],
-      scripts=['script/dadjokes'],
-      install_requires=['requests'],
-      classifiers=[
-          'Programming Language :: Python :: 3'
-      ]
-      )
+setup(
+    name='dadjokes',
+    version=__version__,
+    description='icanhazdadjoke api wrapper',
+    long_description=readme(),
+    long_description_content_type="text/markdown",
+    url='https://github.com/crossnox/dadjokes',
+    author='CrossNox',
+    packages=['dadjokes'],
+    scripts=['script/dadjokes'],
+    install_requires=['requests'],
+    extras_require={'dev': ['bump']},
+    classifiers=['Programming Language :: Python :: 3'],
+)

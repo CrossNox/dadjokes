@@ -1,0 +1,4 @@
+[bump]
+input = dadjokes/constants.py
+minor = false
+patch = true

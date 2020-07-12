@@ -1,5 +1,5 @@
 import requests
-from dadjokes import USER_AGENT, BASE_URL, HEADERS
+from dadjokes import BASE_URL, HEADERS
 import urllib
 from functools import lru_cache
 
@@ -69,15 +69,11 @@ class Dadjoke:
     @property
     def as_slack(self):
         joke = self.joke
-        reponse = {'attachments': [
-            {
-                'fallback': joke,
-                'footer': ' - ',
-                'text': joke
-            }
-        ],
+        reponse = {
+            'attachments': [{'fallback': joke, 'footer': ' - ', 'text': joke}],
             'response_type': 'in_channel',
-            'username': 'dadjokes'}
+            'username': 'dadjokes',
+        }
         return reponse
 
     @property
